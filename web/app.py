@@ -226,7 +226,7 @@ for turn in conv.get("turns", []):
 # ============================================================
 _chat = st.chat_input(
     "描述你的 PyTorch 代码问题，或要求按需修改代码…",
-    accept_file=True,
+    accept_file="multiple",
     file_type=["py", "txt", "json", "log", "md", "csv", "png", "jpg", "jpeg"],
 )
 
