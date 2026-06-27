@@ -47,3 +47,23 @@ def search_knowledge_base(query: str, top_k: int = 3) -> str:
 def knowledge_base_stats() -> str:
     """返回知识库统计信息。无参数。"""
     return get_engine().stats()
+
+
+@tool(description="列出知识库中实际包含的全部来源文件及各自的文本块数量，用于确认某份资料是否已入库")
+def list_knowledge_sources() -> str:
+    """列出知识库里真实存在的来源文件清单（含每个文件的文本块数）。无参数。
+
+    当需要回答"知识库里有哪些资料""某个文件是否已入库"时，调用本工具查证，
+    不要凭空猜测。
+    """
+    engine = get_engine()
+    if engine.count() == 0:
+        return "[提示] 知识库为空，尚未入库任何文档。"
+    sources = engine.list_sources()
+    if not sources:
+        return "知识库非空，但未能读取到来源信息。"
+    lines = [f"知识库共包含 {len(sources)} 个来源文件，合计 {engine.count()} 个文本块："]
+    for name, n in sources:
+        lines.append(f"  - {name}：{n} 块")
+    return "\n".join(lines)
+
